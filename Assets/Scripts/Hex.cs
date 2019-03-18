@@ -23,6 +23,7 @@ public class Hex{
     // Data for map generation & in game effects?
     public float Elevation;
 
+    public readonly HexMap HexMap;
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
     float radius = 1f;

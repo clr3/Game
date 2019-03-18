@@ -10,6 +10,19 @@ public class HexMap : MonoBehaviour
         GenerateMap();
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if(units != null)
+            {
+                foreach(Unit u in units)
+                {
+                    u.DoTurn();
+                }
+            }
+        }
+    }
     public GameObject HexPrefab;
 
     public Mesh MeshMountain;
@@ -198,8 +211,9 @@ public class HexMap : MonoBehaviour
             unitToGameObjectMap = new Dictionary<Unit, GameObject>();
         }
 
-        GameObject myHex = hexToGameObjectMap[GetHexAt(q,r)];
-        GameObject unitGO = Instantiate(prehab, myHex.transform.position, Quaternion.identity, myHex.transform);
+        GameObject myHexGO = hexToGameObjectMap[GetHexAt(q,r)];
+        unit.setHex(GetHexAt(q, r));
+        GameObject unitGO = Instantiate(prehab, myHexGO.transform.position, Quaternion.identity, myHexGO.transform);
 
         units.Add(unit);
         unitToGameObjectMap[unit] = unitGO;
