@@ -181,6 +181,70 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &450705853
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 450705855}
+  - component: {fileID: 450705854}
+  m_Layer: 0
+  m_Name: HexMap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &450705854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450705853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 392ced7948e9f7646bdfeb52efd5f3b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HexPrefab: {fileID: 3198387908726328146, guid: e39246b5d920d824b87ed30e1aecc424,
+    type: 3}
+  MeshMountain: {fileID: 4300000, guid: 7b43e4137e75e9f45869d9f3674b0165, type: 3}
+  MeshHill: {fileID: 4300000, guid: 9e00b4e22a051ec41a40f3b7cb81d743, type: 3}
+  MeshLand: {fileID: 4300000, guid: 25d436e688f7d714690718841ee7deb8, type: 3}
+  MeshFlat: {fileID: 4300000, guid: fdeead8895a0835458df3a0e118ff589, type: 3}
+  MeshWater: {fileID: 4300000, guid: fdeead8895a0835458df3a0e118ff589, type: 3}
+  MeshSwamp: {fileID: 4300000, guid: fdeead8895a0835458df3a0e118ff589, type: 3}
+  CityPrefab: {fileID: 826378642419926883, guid: 3098c8484a0dcc44a86b1841499b7804,
+    type: 3}
+  GrassPrefab: {fileID: 1682501917284243561, guid: 145ff72a547b28048ab3ec136b42dcfb,
+    type: 3}
+  MatMountains: {fileID: 2100000, guid: 0b5fc37c5782c494ca843af772b51c0e, type: 2}
+  MatLand: {fileID: 2100000, guid: 1672b38b65b6d8846b82d0c82be55bcb, type: 2}
+  MatSwamp: {fileID: 2100000, guid: 17033ed5ca6b9d44fbbda56a175fc89c, type: 2}
+  MatPlains: {fileID: 2100000, guid: 85f36b46c1c01194c9d43b8b87900bbf, type: 2}
+  MatGrasslands: {fileID: 2100000, guid: 31a188d1a12b77d4b97b4a4020c26dcb, type: 2}
+  MatRiver: {fileID: 2100000, guid: aace424d559bbe343acdd9b940b78498, type: 2}
+  MatHome: {fileID: 2100000, guid: f2020ea9e42dc7140a90e83767d87829, type: 2}
+  UnitDwarfPrehab: {fileID: 1433496505157953883, guid: 800a23065348a6d4c870845c00e2580e,
+    type: 3}
+--- !u!4 &450705855
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450705853}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,7 +323,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 40, y: 10, z: 20}
+  m_LocalPosition: {x: 40.72066, y: 44.12979, z: -2.2388644}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -326,68 +390,6 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 824178869}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2033603520
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2033603522}
-  - component: {fileID: 2033603521}
-  m_Layer: 0
-  m_Name: HexMap
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2033603521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2033603520}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 392ced7948e9f7646bdfeb52efd5f3b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HexPrefab: {fileID: 3198387908726328146, guid: e39246b5d920d824b87ed30e1aecc424,
-    type: 3}
-  MeshMountain: {fileID: 4300000, guid: 7b43e4137e75e9f45869d9f3674b0165, type: 3}
-  MeshHill: {fileID: 4300000, guid: 9e00b4e22a051ec41a40f3b7cb81d743, type: 3}
-  MeshLand: {fileID: 4300000, guid: 25d436e688f7d714690718841ee7deb8, type: 3}
-  MeshFlat: {fileID: 4300000, guid: fdeead8895a0835458df3a0e118ff589, type: 3}
-  MeshWater: {fileID: 4300000, guid: fdeead8895a0835458df3a0e118ff589, type: 3}
-  MeshSwamp: {fileID: 4300000, guid: fdeead8895a0835458df3a0e118ff589, type: 3}
-  CityPrefab: {fileID: 826378642419926883, guid: 3098c8484a0dcc44a86b1841499b7804,
-    type: 3}
-  GrassPrefab: {fileID: 1682501917284243561, guid: 145ff72a547b28048ab3ec136b42dcfb,
-    type: 3}
-  MatMountains: {fileID: 2100000, guid: 0b5fc37c5782c494ca843af772b51c0e, type: 2}
-  MatLand: {fileID: 2100000, guid: 1672b38b65b6d8846b82d0c82be55bcb, type: 2}
-  MatSwamp: {fileID: 2100000, guid: 17033ed5ca6b9d44fbbda56a175fc89c, type: 2}
-  MatPlains: {fileID: 2100000, guid: 85f36b46c1c01194c9d43b8b87900bbf, type: 2}
-  MatGrasslands: {fileID: 2100000, guid: 31a188d1a12b77d4b97b4a4020c26dcb, type: 2}
-  MatRiver: {fileID: 2100000, guid: aace424d559bbe343acdd9b940b78498, type: 2}
-  MatHome: {fileID: 2100000, guid: f2020ea9e42dc7140a90e83767d87829, type: 2}
---- !u!4 &2033603522
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2033603520}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
