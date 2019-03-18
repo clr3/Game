@@ -6,8 +6,10 @@ using System.Linq;
 //Defines grid position, world space position, size, neighbours of a hex tile. Does not interact with unity directly.
 public class Hex{
 
-    public Hex(int c, int r)
+    public Hex(HexMap hexMap, int c, int r)
     {
+
+        this.HexMap = hexMap;
         this.C = c;
         this.R = r;
         this.S = -(c + r);
@@ -23,7 +25,11 @@ public class Hex{
     // Data for map generation & in game effects?
     public float Elevation;
 
+    //TODO: Property to track hex type
+    //TODO: Property to track hex detail
+
     public readonly HexMap HexMap;
+
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
     float radius = 1f;
@@ -60,6 +66,11 @@ public class Hex{
     public float HexHorizontalSpacing()
     {
         return HexWidth();
+    }
+
+    public Vector3 PositionFromCamera()
+    {
+        return HexMap.GetHexPosition(this);
     }
 
     public Vector3 PositionFromCamera(Vector3 cameraPosition, float numRows, float numColumns)
@@ -134,5 +145,11 @@ public class Hex{
     public Unit[] Units()
     {
         return units.ToArray();
+    }
+
+    public int BaseMovementCost()
+    {
+        //TODO: Factor in terrain type & features
+        return 1;
     }
 }

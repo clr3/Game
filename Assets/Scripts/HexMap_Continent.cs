@@ -12,7 +12,7 @@ public class HexMap_Continent : HexMap
         //Uncomment to get same map
         //Random.InitState(0);
         // Hex midHex = new Hex(numColumns*3/4, numRows / 2);
-        Hex midHex = new Hex(numColumns /2, numRows / 2);
+        Hex midHex = new Hex(this, numColumns /2, numRows / 2);
 
         int numContinents = 20;
         int continentSpacing = numColumns / numContinents;

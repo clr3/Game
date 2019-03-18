@@ -85,8 +85,30 @@ public class HexMap : MonoBehaviour
             y = y % numRows;
             if (y < 0) y += numRows;
         }
-        return hexes[x, y];
+        try
+        {
+            return hexes[x, y];
+        }
+        catch
+        {
+            Debug.LogError("GetHexAt:" + x + "," + y);
+            return null;
+        }
+        
     }
+
+    public Vector3 GetHexPosition(int q, int r)
+    {
+        Hex hex = GetHexAt(q, r);
+
+        return GetHexPosition(hex);
+    }
+
+    public Vector3 GetHexPosition(Hex hex)
+    {
+        return hex.PositionFromCamera(Camera.main.transform.position, numRows, numColumns);
+    }
+
     virtual public void GenerateMap()
     {
 
@@ -100,7 +122,7 @@ public class HexMap : MonoBehaviour
             for (int row = 0; row < numRows; row++)
             {
                 //Instantiate hex
-                Hex h = new Hex(column, row);
+                Hex h = new Hex(this, column, row);
                 h.Elevation = 0f;
 
                 hexes[column, row] = h;
@@ -211,9 +233,12 @@ public class HexMap : MonoBehaviour
             unitToGameObjectMap = new Dictionary<Unit, GameObject>();
         }
 
+        Hex myHex = GetHexAt(q, r);
         GameObject myHexGO = hexToGameObjectMap[GetHexAt(q,r)];
-        unit.setHex(GetHexAt(q, r));
-        GameObject unitGO = Instantiate(prehab, myHexGO.transform.position, Quaternion.identity, myHexGO.transform);
+        unit.SetHex(myHex);
+
+        GameObject unitGO = (GameObject)Instantiate(prehab, myHexGO.transform.position, Quaternion.identity, myHexGO.transform);
+        unit.OnUnitMoved += unitGO.GetComponent<UnitView>().OnUnitMoved;
 
         units.Add(unit);
         unitToGameObjectMap[unit] = unitGO;
