@@ -19,7 +19,7 @@ public class CharacterTurns : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        characters = new Unit[](charater1,charater2,charater3,charater4,charater5);
+        characters = new Unit[noOfCharacters](charater1,charater2,charater3,charater4,charater5);
     }
 
     // Update is called once per frame
