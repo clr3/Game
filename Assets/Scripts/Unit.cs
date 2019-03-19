@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using QPath;
 using System.Linq;
+using System;
 
 public class Unit : IQPathUnit{
    
@@ -142,22 +143,6 @@ public class Unit : IQPathUnit{
         }
     }
 
-    public void DUMMY_PATHING_FUNCTION()
-    {
-
-        Hex[] pathHexes = QPath.QPath.FindPath<Hex>(
-            Hex.HexMap,
-            this, 
-            Hex, 
-            Hex.HexMap.GetHexAt(Hex.C + 3, Hex.R - 6), 
-            Hex.CostEstimate
-            );
-
-        Debug.Log("Got pathfinding path of length " + pathHexes.Length);
-        SetHexPath(pathHexes);
-
-    }
-
     public void ClearHexPath()
     {
         this.hexPath = new Queue<Hex>();
@@ -165,13 +150,26 @@ public class Unit : IQPathUnit{
     public void SetHexPath(Hex[] hexArray)
     {
         this.hexPath = new Queue<Hex>(hexArray);
-
+        /*
         if (hexPath.Count > 0)
         {
             this.hexPath.Dequeue(); // First hex is the one we're standing in, so throw it out.
-        }
+        }*/
     }
 
+    public Hex[] GetHexPath()
+    {
+        return (this.hexPath == null) ? null : this.hexPath.ToArray();
+    }
+
+    public static void MyDelay(int seconds)
+    {
+        DateTime dt = DateTime.Now + TimeSpan.FromSeconds(seconds);
+
+        do { } while (DateTime.Now < dt);
+    }
+
+    
     public void DoTurn()
     {
         // do queued move?
@@ -182,23 +180,52 @@ public class Unit : IQPathUnit{
         {
             return;
         }
-        // Grab first hex from queue 
-        Hex newHex = hexPath.Dequeue();
+
+        /*Hex hexWeAreLeaving =*/ hexPath.Dequeue();
+        Hex newHex = hexPath.Peek();
+
+        if(hexPath.Count == 1)
+        {
+            // only 1 more hex left, no more path to follow
+            hexPath = null;
+        }
 
         SetHex(newHex);
+
+
+        // Grab first hex from queue 
+
     }
 
-    public int MovementCostToEnterHex(Hex hex)
+    public int MovementCostToEnterHex(Hex hex, bool isScout)
     {
-        //TODO: Override base movement cost based on movement mode + tile type;
+        if (isScout)
+        {
+            if (hex.ElevationType == Hex.ELEVATION_TYPE.SWAMP)
+            {
+                return 3;
+            }
+
+            if (hex.ElevationType == Hex.ELEVATION_TYPE.MOUNTAIN || hex.ElevationType == Hex.ELEVATION_TYPE.RIVER)
+            {
+                return 8;
+            }
+
+            if (hex.ElevationType == Hex.ELEVATION_TYPE.DESERT)
+            {
+                return 5;
+            }
+            return 1;
+        }
         return hex.BaseMovementCost();
+
     }
     float test_speed = 2;
     float test_ap = 1;
 
     public float AggregateTurnsToEnterHex(Hex hex, float turnsToDate)
     {
-        float baseTurnsToEnterHex = MovementCostToEnterHex(hex) / test_speed; //Ex: Entering grass "1" turn
+        float baseTurnsToEnterHex = MovementCostToEnterHex(hex, false) / test_speed; //Ex: Entering grass "1" turn
 
         if(baseTurnsToEnterHex < 0)
         {

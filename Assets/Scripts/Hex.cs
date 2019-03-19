@@ -23,12 +23,15 @@ public class Hex : IQPathTile {
     public readonly int R;
     public readonly int S;
 
+
     // Data for map generation & in game effects?
     public float Elevation;
-    //TODO: This is just a temp public value
-    public int MovementCost = 1;
-    //TODO: Property to track hex type
-    //TODO: Property to track hex detail
+
+    public enum TERRAIN_TYPE { PLAINS, GRASSLANDS, SWAMP, DESERT, RIVER, MOUNTAIN, HILLS}
+    public enum ELEVATION_TYPE { PLAINS, GRASSLANDS, SWAMP, DESERT, RIVER, MOUNTAIN, HILLS }
+
+    public TERRAIN_TYPE TerrainType { get; set; }
+    public ELEVATION_TYPE ElevationType { get; set; }
 
     public readonly HexMap HexMap;
 
@@ -160,8 +163,31 @@ public class Hex : IQPathTile {
 
     public int BaseMovementCost()
     {
-        //TODO: Factor in terrain type & features
-        return MovementCost;
+        if (ElevationType == ELEVATION_TYPE.SWAMP)
+        {
+            return 5;
+        }
+
+        if (ElevationType == ELEVATION_TYPE.MOUNTAIN || ElevationType  == ELEVATION_TYPE.RIVER)
+        {
+            return -99;
+        }
+
+        if (ElevationType == ELEVATION_TYPE.DESERT)
+        {
+            return 7;
+        }
+
+        if (ElevationType == ELEVATION_TYPE.HILLS)
+        {
+            return 3;
+        }
+        if (ElevationType == ELEVATION_TYPE.PLAINS)
+        {
+            return 2;
+        }
+
+        return 1;
     }
 
     Hex[] neighbours; 

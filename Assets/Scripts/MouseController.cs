@@ -47,13 +47,43 @@ public class MouseController : MonoBehaviour
 
         LastMousePosition =  Input.mousePosition;
         hexLastUnderMouse = hexUnderMouse;
+
+        if(selectedUnit != null)
+        {
+            DrawPath((hexPath != null) ? hexPath: selectedUnit.GetHexPath());
+        }
+        else
+        {
+            DrawPath(null);
+        }
     }
-    
+
+    void DrawPath(Hex[] hexPath)
+    {
+        if (hexPath == null || hexPath.Length == 0)
+        {
+            LineRenderer.enabled = false;
+            return;
+        }
+        LineRenderer.enabled = true;
+        Vector3[] ps = new Vector3[hexPath.Length];
+        for (int i = 0; i < hexPath.Length; i++)
+        {
+            GameObject hexGO = hexMap.GetHexGO(hexPath[i]);
+            ps[i] = hexGO.transform.position + Vector3.up * 0.5f;
+        }
+        LineRenderer.positionCount = ps.Length;
+        LineRenderer.SetPositions(ps);
+        //DrawPath(hexPath);
+    }
+
     void CancelUpdateFunc()
     {
         Update_CurrentFunc = Update_DetectModeStart;
         //Also do cleanup of ui associated with modes
         selectedUnit = null;
+
+        hexPath = null;
     }
     void Update_DetectModeStart()
     {
@@ -62,7 +92,7 @@ public class MouseController : MonoBehaviour
         {
             //LMB went down;
         }
-        else if (Input.GetMouseButtonUp(1))
+        else if (Input.GetMouseButtonUp(0))
         {
             // Debug.Log("MOUSE UP");
             Unit[] us = hexUnderMouse.Units();
@@ -71,9 +101,14 @@ public class MouseController : MonoBehaviour
             if(us.Length > 0 )
             {
                 selectedUnit = us[0];
-                Update_CurrentFunc = Update_UnitMovement;
             }
            
+        }
+
+        else if ( selectedUnit != null && Input.GetMouseButtonDown(0))
+        {
+            Update_CurrentFunc = Update_UnitMovement;
+
         }
 
         else if (Input.GetMouseButton(1) && Input.mousePosition != LastMousePosition)
@@ -115,9 +150,10 @@ public class MouseController : MonoBehaviour
         float rayLength = mouseRay.origin.y / mouseRay.direction.y;
         return mouseRay.origin - (mouseRay.direction * rayLength);
     }
+
     void Update_UnitMovement()
     {
-        if (Input.GetMouseButtonUp(1) || selectedUnit == null)
+        if (Input.GetMouseButtonUp(0) || selectedUnit == null)
         {
             Debug.Log("complete unit movement");
 
@@ -134,28 +170,12 @@ public class MouseController : MonoBehaviour
         {
             hexPath = QPath.QPath.FindPath<Hex>(hexMap, selectedUnit, selectedUnit.Hex, hexUnderMouse, Hex.CostEstimate);
 
-            DrawPath(hexPath);
+           
         }
 
     }
 
-    void DrawPath(Hex[] hexPath)
-    {
-        if(hexPath.Length == 0)
-        {
-            LineRenderer.enabled = false;
-            return;
-        }
-        LineRenderer.enabled = true;
-        Vector3[] ps = new Vector3[hexPath.Length];
-        for(int i = 0; i < hexPath.Length; i++)
-        {
-            GameObject hexGO = hexMap.GetHexGO(hexPath[i]);
-            ps[i] = hexGO.transform.position;
-        }
-        LineRenderer.positionCount = ps.Length;
-        LineRenderer.SetPositions(ps);
-    }
+
 
     void Update_CameraDrag()
     {

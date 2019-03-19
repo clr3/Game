@@ -23,16 +23,6 @@ public class HexMap : MonoBehaviour, IQPathWorld
                 }
             }
         }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            if (units != null)
-            {
-                foreach (Unit u in units)
-                {
-                    u.DUMMY_PATHING_FUNCTION();
-                }
-            }
-        }
     }
     public GameObject HexPrefab;
 
@@ -198,46 +188,41 @@ public class HexMap : MonoBehaviour, IQPathWorld
 
                 MeshRenderer mr = hexGO.GetComponentInChildren<MeshRenderer>();
                 MeshFilter mf = hexGO.GetComponentInChildren<MeshFilter>();
-                h.MovementCost = 1;
                 if (h.Elevation >= HeightMountain)
                 {
                     mr.material = MatMountains;
                     mf.mesh = MeshMountain;
-                    h.MovementCost = -999999;
+                    h.ElevationType = Hex.ELEVATION_TYPE.MOUNTAIN;
                 }
                 else if (h.Elevation >= HeightLand)
                 {
                     mr.material = MatLand;
                     mf.mesh = MeshLand;
-                    h.MovementCost = 9;
-
+                    h.ElevationType = Hex.ELEVATION_TYPE.DESERT;
                 }
                 else if (h.Elevation >= HeightSwamp)
                 {
                     mr.material = MatSwamp;
                     mf.mesh = MeshSwamp;
-                    h.MovementCost = 6;
-
+                    h.ElevationType = Hex.ELEVATION_TYPE.SWAMP;
                 }
                 else if (h.Elevation >= HeightPlains)
                 {
                     mr.material = MatPlains ;
                     mf.mesh = MeshHill;
-                    h.MovementCost = 4;
-
+                    h.ElevationType = Hex.ELEVATION_TYPE.PLAINS;
                 }
                 else if (h.Elevation >= HeightGrasslands)
                 {
                     mr.material = MatGrasslands;
                     mf.mesh = MeshFlat;
-
-                    h.MovementCost = 1;
-
+                    h.ElevationType = Hex.ELEVATION_TYPE.GRASSLANDS;
                     // GameObject.Instantiate(GrassPrefab, hexGO.transform.position, Quaternion.identity, hexGO.transform);
                 }
                 else
                 {
                     mr.material = MatRiver;
+                    h.ElevationType = Hex.ELEVATION_TYPE.RIVER;
                 }
 
                 if (column == numColumns/2 && row == numRows/2)
@@ -247,7 +232,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
                     GameObject.Instantiate(CityPrefab, hexGO.transform.position, Quaternion.identity, hexGO.transform);
                     
                 }
-                hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1},\n{2}", column, row, h.MovementCost);
+                hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1},\n{2}", column, row, h.BaseMovementCost());
 
                 //hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}", h.MovementCost);
 
