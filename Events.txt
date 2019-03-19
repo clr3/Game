@@ -1,0 +1,25 @@
+Clear Skies
+You attempt to harness the solar power of the bright green sun
+0 0 4 0 0 strength/speed/intelligence/social/dicePool
+0 0 0 0 0 0 0 0 2 0 0 0 /health/sanity/strengthDiceBank/speedDiceBank/intelligenceDiceBank/socialDiceBank/maxHealth/maxSanity/actionPoints/food/materials/meds
+0 0 0 0 0 0 0 0 0 0 0 0
+Space Ants
+Stamp.. Stamp.. Stamp..
+2 3 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+-1 -1 0 0 0 0 0 0 0 0 0 0
+Alien scripture
+You attempt to decipher to learn about their culture
+0 0 5 0 0
+0 0 0 0 0 2 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Godzilla
+Well... bye
+8 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+-4 0 0 0 0 0 0 0 0 0 0 0
+OH Look at the time!
+you realise its getting dark FAST, make it to shelter before nightfall
+0 3 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+0 -3 0 0 0 0 0 0 0 0 0 0
