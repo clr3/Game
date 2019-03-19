@@ -6,48 +6,66 @@ using System.Linq;
 using System;
 
 public class Unit : IQPathUnit{
-   
-    //Character Informarion
-    [SerializeField] public string characterName { get; set; }
-    [SerializeField] public string description { get; set; }
-    [SerializeField] public Dictionary<string, string> challengeSkills = new Dictionary<string, string>(); //Have to match the name of the skill class 
-    public string[] mapSkills = new string[6];
-    public int[] extraDice = new int[] { 0, 0, 0, 0 };  //Events can Increment this numbers
-
-    //Charactes Stats
-    [SerializeField] public int strenght { get; set; }
-    [SerializeField] public int speed { get; set; }
-    [SerializeField] public int intelligence { get; set; }
-    [SerializeField] public int charisma { get; set; }
-    [SerializeField] public int health { get; set; }
-    [SerializeField] public int sanity { get; set; }
-
-    private int ap { get; set; }         //AP = to speed but changes every turn
-    //Character Items
-    public int food { get; set; }
-    public int resources { get; set; }
-    public int meds { get; set; }
 
     //Values that will not be changed
     [SerializeField] private int carryCapacity { get; set; } //Carry Capacity = Strenght 2x
     [SerializeField] private int maxHealth;
     [SerializeField] private int maxSanity;
+    //Information so that it can be changes in unity
+    [SerializeField] private string NAME;
+    [SerializeField] private string BIO;
+    [SerializeField] private int STRENGTH;
+    [SerializeField] private int SPEED;
+    [SerializeField] private int INTELLIGENCE;
+    [SerializeField] private int CHARISMA;
+
+    [SerializeField] public string[] chClassSkills = new string[6];
+    [SerializeField] private string[] chSkillNames = new string[6];//Max size for now(SkillsList)
+    [SerializeField] public string[] mapSkills = new string[6];
+    [SerializeField] public int[] extraDice = new int[] { 0, 0, 0, 0 };  //Events can Increment this numbers
 
 
-    
+    //Character Information
+    public string characterName  { get; set; }
+    public string description { get; set; }
+    [SerializeField] public Dictionary<string, string> challengeSkills = new Dictionary<string, string>(); //Have to match the name of the skill class 
+
+    //Charactes Stats
+    public float speed = 4;
+    public float ap=5;
+
+
+    public int strenght { get; set; }
+   // public int speed { get; set; }
+    public int intelligence { get; set; }
+    public int charisma { get; set; }
+    public int health { get; set; }
+    public int sanity { get; set; }
+
+    //public int ap { get; set; }         //AP = to speed but changes every turn
+    //Character Items
+    public int food { get; set; }
+    public int resources { get; set; }
+    public int meds { get; set; }
+
+
 
     void Start()
     {
         food = 0;
         resources = 0;
         meds = 0;
+
+        Debug.Log(ap);
     }
 
     //Return an array with the values in the order:
     // [Health,Sanity, Strenght, Speed, Intelligence, Social]
     public int[] getStatArray()
     {
-        return new int[] { health, sanity, strenght, speed, intelligence, charisma };
+        return new int[] { health, sanity, strenght,
+            //speed,
+            intelligence, charisma };
     }
 
     public void createCharacterAtributes(int str, int spd, int inte, int ch, int heal, int san)
@@ -79,7 +97,7 @@ public class Unit : IQPathUnit{
     //Returns true when the health of the hero = 0
     public bool Dead()
     {
-        if (health == 0)
+        if (health <= 0)
         {
             return true;
         }
@@ -87,7 +105,7 @@ public class Unit : IQPathUnit{
     }
 
     //Put AP back to max at the end of the turn
-    public void restoreAP()
+    public void RefreshMovement()
     {
         ap = speed;
     }
@@ -120,7 +138,7 @@ public class Unit : IQPathUnit{
     public delegate void UnitMovedDelegate(Hex oldHex, Hex newHex);
     public event UnitMovedDelegate OnUnitMoved;
 
-    Queue<Hex> hexPath;
+    List<Hex> hexPath;
 
     //TODO: Should be moved to central config
     const bool MOVEMENT_RULSE_LIKE_CIV6 = false;
@@ -145,11 +163,11 @@ public class Unit : IQPathUnit{
 
     public void ClearHexPath()
     {
-        this.hexPath = new Queue<Hex>();
+        this.hexPath = new List<Hex>();
     }
     public void SetHexPath(Hex[] hexArray)
     {
-        this.hexPath = new Queue<Hex>(hexArray);
+        this.hexPath = new List<Hex>(hexArray);
         /*
         if (hexPath.Count > 0)
         {
@@ -169,29 +187,53 @@ public class Unit : IQPathUnit{
         do { } while (DateTime.Now < dt);
     }
 
+    public bool UnitWaitingForOrders()
+    {
+        if(ap > 0 && (hexPath == null || hexPath.Count == 0))
+        {
+            return true;
+        }
+        return false;
+    }
     
-    public void DoTurn()
+    public bool DoMove()
     {
         // do queued move?
         Debug.Log("Do turn");
-        //Testing: Move us one tile to the right
+        
+        if(ap <= 0)
+        {
+            return false;
+        }
 
         if(hexPath == null || hexPath.Count == 0)
         {
-            return;
+            return false;
         }
 
-        /*Hex hexWeAreLeaving =*/ hexPath.Dequeue();
-        Hex newHex = hexPath.Peek();
+        Hex hexWeAreLeaving = hexPath[0];
+        Hex newHex = hexPath[1];
 
-        if(hexPath.Count == 1)
+
+
+        int costToEnter = MovementCostToEnterHex(newHex, false);
+
+        if(costToEnter > ap && MOVEMENT_RULSE_LIKE_CIV6)
+        {
+            return false;
+        }
+
+        hexPath.RemoveAt(0);
+
+        if (hexPath.Count == 1)
         {
             // only 1 more hex left, no more path to follow
             hexPath = null;
         }
 
         SetHex(newHex);
-
+        ap = Mathf.Max(ap - costToEnter, 0); 
+        return hexPath != null && ap > 0 ;
 
         // Grab first hex from queue 
 
@@ -220,12 +262,10 @@ public class Unit : IQPathUnit{
         return hex.BaseMovementCost();
 
     }
-    float test_speed = 2;
-    float test_ap = 1;
 
     public float AggregateTurnsToEnterHex(Hex hex, float turnsToDate)
     {
-        float baseTurnsToEnterHex = MovementCostToEnterHex(hex, false) / test_speed; //Ex: Entering grass "1" turn
+        float baseTurnsToEnterHex = MovementCostToEnterHex(hex, false) / speed; //Ex: Entering grass "1" turn
 
         if(baseTurnsToEnterHex < 0)
         {
@@ -234,7 +274,7 @@ public class Unit : IQPathUnit{
             return -9999f;
         }
 
-        float turnsRemaining = test_ap / speed; //Ex: if at 1/2 move, we have .5 turns left
+        float turnsRemaining = ap / speed; //Ex: if at 1/2 move, we have .5 turns left
 
         float turnsToDateWhole = Mathf.Floor(turnsToDate); // 4.33 => 4
         float turnsToDateFraction = turnsToDate - turnsToDateWhole; // 4.33 => 0.33

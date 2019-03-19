@@ -13,6 +13,8 @@ public class MouseController : MonoBehaviour
 
         LineRenderer = transform.GetComponentInChildren<LineRenderer>();
     }
+
+    public GameObject UnitSelectionPanel;
     //Generic Variables
     HexMap hexMap;
     Hex hexUnderMouse;
@@ -23,7 +25,16 @@ public class MouseController : MonoBehaviour
     Vector3 LastMouseGroundPlanePosition;
     Vector3 cameraTargetOffset;
 
-    Unit selectedUnit = null;
+    Unit __selectedUnit = null;
+    public Unit SelectedUnit {
+        get { return __selectedUnit; }
+        set
+        {
+            __selectedUnit = value;
+            UnitSelectionPanel.SetActive(__selectedUnit != null);
+        }
+    }
+
     Hex[] hexPath;
     LineRenderer LineRenderer;
 
@@ -39,6 +50,7 @@ public class MouseController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)){
             Debug.Log("Cancelling camera drag");
             CancelUpdateFunc();
+            SelectedUnit = null;
         }
 
         Update_CurrentFunc();
@@ -48,9 +60,9 @@ public class MouseController : MonoBehaviour
         LastMousePosition =  Input.mousePosition;
         hexLastUnderMouse = hexUnderMouse;
 
-        if(selectedUnit != null)
+        if(SelectedUnit != null)
         {
-            DrawPath((hexPath != null) ? hexPath: selectedUnit.GetHexPath());
+            DrawPath((hexPath != null) ? hexPath: SelectedUnit.GetHexPath());
         }
         else
         {
@@ -62,9 +74,11 @@ public class MouseController : MonoBehaviour
     {
         if (hexPath == null || hexPath.Length == 0)
         {
+            //Debug.Log("Reset path and ");
             LineRenderer.enabled = false;
             return;
         }
+
         LineRenderer.enabled = true;
         Vector3[] ps = new Vector3[hexPath.Length];
         for (int i = 0; i < hexPath.Length; i++)
@@ -81,7 +95,7 @@ public class MouseController : MonoBehaviour
     {
         Update_CurrentFunc = Update_DetectModeStart;
         //Also do cleanup of ui associated with modes
-        selectedUnit = null;
+        //__selectedUnit = null;
 
         hexPath = null;
     }
@@ -100,12 +114,12 @@ public class MouseController : MonoBehaviour
             //TODO: Cycling through multiple units in same tile
             if(us.Length > 0 )
             {
-                selectedUnit = us[0];
+                SelectedUnit = us[0];
             }
            
         }
 
-        else if ( selectedUnit != null && Input.GetMouseButtonDown(0))
+        else if (SelectedUnit != null && Input.GetMouseButtonDown(0))
         {
             Update_CurrentFunc = Update_UnitMovement;
 
@@ -118,7 +132,7 @@ public class MouseController : MonoBehaviour
             LastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
             Update_CurrentFunc();
         }
-        else if (selectedUnit != null && Input.GetMouseButton(0))
+        else if (SelectedUnit != null && Input.GetMouseButton(0))
         {
             //we have a selected unit, and holding down LMB. show path from unit to mouse position
         }
@@ -138,7 +152,7 @@ public class MouseController : MonoBehaviour
             GameObject hexGO = hitInfo.rigidbody.gameObject;
             return hexMap.GetHexFromGameObject(hexGO);
         }
-        Debug.Log("found nothing");
+        //Debug.Log("found nothing");
 
         return null;
     }
@@ -153,13 +167,15 @@ public class MouseController : MonoBehaviour
 
     void Update_UnitMovement()
     {
-        if (Input.GetMouseButtonUp(0) || selectedUnit == null)
+        if (Input.GetMouseButtonUp(0) || SelectedUnit == null)
         {
             Debug.Log("complete unit movement");
 
-            if(selectedUnit != null)
+            if(SelectedUnit != null)
             {
-                selectedUnit.SetHexPath(hexPath);
+                SelectedUnit.SetHexPath(hexPath);
+
+                StartCoroutine(hexMap.DoUnitMoves(SelectedUnit));
             }
 
             CancelUpdateFunc();
@@ -168,15 +184,13 @@ public class MouseController : MonoBehaviour
 
         if (hexPath == null || hexUnderMouse != hexLastUnderMouse)
         {
-            hexPath = QPath.QPath.FindPath<Hex>(hexMap, selectedUnit, selectedUnit.Hex, hexUnderMouse, Hex.CostEstimate);
+            hexPath = QPath.QPath.FindPath<Hex>(hexMap, SelectedUnit, SelectedUnit.Hex, hexUnderMouse, Hex.CostEstimate);
 
            
         }
 
     }
-
-
-
+    
     void Update_CameraDrag()
     {
         if (Input.GetMouseButtonUp(1))

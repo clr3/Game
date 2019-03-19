@@ -11,17 +11,45 @@ public class HexMap : MonoBehaviour, IQPathWorld
         GenerateMap();
     }
 
+    public bool animationIsPlaying = false;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if(units != null)
+            StartCoroutine(DoAllUnitMoves());
+        }
+    }
+
+    IEnumerator DoAllUnitMoves()
+    {
+        if (units != null)
+        {
+            foreach (Unit u in units)
             {
-                foreach(Unit u in units)
-                {
-                    u.DoTurn();
-                }
+               yield return DoUnitMoves(u);
+
             }
+        }
+    }
+
+    public IEnumerator DoUnitMoves(Unit u)
+    {
+        while (u.DoMove())
+        {
+            Debug.Log("DoMove returned true");
+            //TODO: Check to see if animation is playing, if so wait for it to finish.
+            while (animationIsPlaying)
+            {
+                yield return null;
+            }
+        }
+    }
+    public void EndTurn()
+    {
+
+        foreach(Unit u in units)
+        {
+            u.RefreshMovement();
         }
     }
     public GameObject HexPrefab;

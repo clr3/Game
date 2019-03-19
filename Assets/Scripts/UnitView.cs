@@ -30,10 +30,19 @@ public class UnitView : MonoBehaviour {
             // Hopping from one end of the map to other (moves more than excpected move between two adjacent tiles), so just teleport
             this.transform.position = newPosition;
         }
+        else
+        {
+            GameObject.FindObjectOfType<HexMap>().animationIsPlaying = true;
+        }
     }
 
     void Update()
     {
         this.transform.position = Vector3.SmoothDamp(this.transform.position, newPosition, ref currentVelocity, smoothTime);
+
+        if ( Vector3.Distance(this.transform.position,newPosition) < 0.1f)
+        {
+            GameObject.FindObjectOfType<HexMap>().animationIsPlaying = false;
+        }
     }
 }

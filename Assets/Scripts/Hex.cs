@@ -15,6 +15,7 @@ public class Hex : IQPathTile {
         this.R = r;
         this.S = -(c + r);
 
+        units = new HashSet<Unit>();
     }
     // C + S + R = 0
     // S = -( C + R )
@@ -158,6 +159,7 @@ public class Hex : IQPathTile {
 
     public Unit[] Units()
     {
+
         return units.ToArray();
     }
 
