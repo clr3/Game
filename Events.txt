@@ -43,3 +43,113 @@ As you try to sleep, strange noises from the darkness unsettle you. You think th
 0 0 2 4 7
 0 -2 0 0 0 1 0 0 0 0 0 0
 0 -15 0 0 0 0 0 0 0 0 0 0
+Storm
+As you stop, you notice there is a storm approaching. You find cover in a nearby but will have to wait until the storm has passed before getting back on the move.
+0 0 0 0 0 
+0 -12 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Small Alien Corpse
+You notice a disgusting smell emanating from somewhere nearby. You are able to skin it and get some food and materials.
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 2 1 0 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Alien Corpse
+You notice a disgusting smell emanating from somewhere nearby. As you approach it, a small creature jumps from a nearby bush. You must be fast enough to outrun it or strong enough to kill him.
+2 2 0 0 8 
+0 0 0 0 0 0 0 0 0 2 1 0 
+-2 -1 0 0 0 0 0 0 0 0 0 0 
+Bush
+When you approach this bush, you notice there are some berries growing in it. Are they edible?
+0 0 4 0 6 
+1 0 0 0 0 0 0 0 0 2 0 2 
+-2 -1 0 0 0 0 0 0 0 0 0 0 
+Bush
+This bush seems to be hiding a secret stash. Who left this here?
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 1 1 1 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Wondering Trader
+You see a creature you've never seen before. It seems friendly, and surely enough it approaches you. You attempt to communicate and get some useful materials from this stranger.
+0 1 0 3 6 
+0 0 0 0 0 1 0 0 0 3 0 1 
+0 -2 0 0 0 0 0 0 0 0 0 0 
+Giant Worm
+This huge creature surged from the ground right in-front of your eyes. You must hide in order to Survive
+1 2 2 0 8 
+0 0 0 0 0 1 0 0 0 0 0 0 
+0 -2 0 0 0 0 0 0 0 0 0 0
+Clear Skies
+You attempt to harness the power of the bright green sun and make yourself grossly incandescent.
+0 0 4 0 7 strength/speed/intelligence/social/dicePool
+0 0 0 0 0 0 0 0 2 0 0 0 /health/sanity/strengthDiceBank/speedDiceBank/intelligenceDiceBank/socialDiceBank/maxHealth/maxSanity/actionPoints/food/materials/meds
+0 0 0 0 0 0 0 0 0 0 0 0
+Space Ants
+Stamp.. Stamp.. Stamp..
+2 3 0 0 8
+0 0 0 0 0 0 0 0 0 0 0 0
+-1 -1 0 0 0 0 0 0 0 0 0 0
+Alien scripture
+You attempt to decipher to learn about their culture
+0 0 5 0 8
+0 0 0 0 0 2 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Godzilla
+Well... bye
+8 0 0 0 12
+0 0 0 0 0 0 0 0 0 0 0 0
+-4 0 0 0 0 0 0 0 0 0 0 0
+OH Look at the time!
+you realise its getting dark FAST, make it to shelter before nightfall
+0 3 0 0 5
+0 0 0 0 0 0 0 0 0 0 0 0
+0 -3 0 0 0 0 0 0 0 0 0 0
+Food Cache
+You find a cache from your ship which contains some food in it.
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 2 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Meds Cache
+You find a cache from your ship which contains some meds in it.
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 1 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Materials Cache
+You find a cache from your ship which contains some materials in it.
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 2 0 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Medium Cache
+You find a cache from your ship which contains some meds and food in it.
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 2 0 1 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Large Cache
+You find a cache from your ship which contains some meds, food and materials in it.
+0 0 0 0 0 
+0 0 1 0 0 0 0 0 0 2 1 1 
+0 0 0 0 0 0 0 0 0 0 0 0
+Food Cache
+You find a cache from your ship which contains some food in it.
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 2 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Meds Cache
+You find a cache from your ship which contains some meds in it.
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 1 
+0 0 0 0 0 0 0 0 0 0 0 0 
+Materials Cache
+You find a cache from your ship which contains some materials in it.
+0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 2 0 
+0 0 0 0 0 0 0 0 0 0 0 0
+Berry Bushes
+You find some juicy-looking alien berries! Well you hope they’re berries, anyway. You quickly gather them up and move on.
+0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Effortless Hunt
+Not all this world’s wildlife is hostile, some of them seem completely passive. Studying this will be a task for more well-provisioned colonies, however. 
+0 0 0 0 0
+0 0 0 0 0 0 0 0 0 2 0 0
+0 0 0 0 0 0 0 0 0 0 0 0

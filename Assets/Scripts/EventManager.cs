@@ -26,47 +26,44 @@ public class EventManager : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
         LoadEvents();
+        TriggerEvent();
     }
 
     void LoadEvents()
     {
         using (TextReader reader = File.OpenText(FILE_NAME))
         {
+            while (reader.Peek() != -1) {
+                string title = reader.ReadLine();
 
-            if (reader.Peek() == -1) return;
-            string title = reader.ReadLine();
-            Debug.Log(title);
+                string text = reader.ReadLine();
 
-            string text = reader.ReadLine();
-            Debug.Log(text);
+                string checkline = reader.ReadLine();
+                string[] checkbits = checkline.Split(' ');
+                int[] check = new int[numcheck];
+                for (int i = 0; i < numcheck; i++) check[i] = int.Parse(checkbits[i]);
 
-            string checkline = reader.ReadLine();
-            string[] checkbits = checkline.Split(' ');
-            int[] check = new int[numcheck];
-            for (int i = 0; i < numcheck; i++) check[i] = int.Parse(checkbits[i]); 
+                string successline = reader.ReadLine();
+                string[] successbits = successline.Split(' ');
+                int[] success = new int[numstats];
+                for (int i = 0; i < numstats; i++) success[i] = int.Parse(successbits[i]);
 
-            Debug.Log(check);
+                string failureline = reader.ReadLine();
+                string[] failurebits = failureline.Split(' ');
+                int[] failure = new int[numstats];
+                for (int i = 0; i < numstats; i++) failure[i] = int.Parse(failurebits[i]);
 
-            string successline = reader.ReadLine();
-            string[] successbits = successline.Split(' ');
-            int[] success = new int[numstats];
-            for (int i = 0; i < numstats; i++) success[i] = int.Parse(successbits[i]);
-
-            string failureline = reader.ReadLine();
-            string[] failurebits = failureline.Split(' ');
-            int[] failure = new int[numstats];
-            for (int i = 0; i < numstats; i++) failure[i] = int.Parse(failurebits[i]);
-
-            Event e = new Event();
-            e.Create(title, text, check, success, failure);
-            EventList.Add(e);
+                Event e = new Event();
+                e.Create(title, text, check, success, failure);
+                EventList.Add(e);
+            }
         }
     }
 
     Event GetEvent()
     {
-       // int r = rnd.Next(EventList.Count);
-        return EventList[0];
+        int r = UnityEngine.Random.Range(0, EventList.Count);
+        return EventList[r];
     }
 
     public void TriggerEvent() {
