@@ -10,7 +10,7 @@ public class HexMap_Continent : HexMap
         base.GenerateMap();
 
         //Uncomment to get same map
-        //Random.InitState(0);
+        Random.InitState(0);
         // Hex midHex = new Hex(numColumns*3/4, numRows / 2);
         Hex midHex = new Hex(this, numColumns /2, numRows / 2);
 
@@ -48,7 +48,7 @@ public class HexMap_Continent : HexMap
 
                 h.Elevation += n * noiseScale;
 
-                if (Hex.Distance(h, midHex) <= numRows / 8) h.Elevation %= 0.4f;
+                if (Hex.Distance(h, midHex) <= numRows / 8) h.Elevation %= 0.4f ;
 
                 else if (Hex.Distance(h, midHex) <= numRows * 2 / 8)
                 {
@@ -60,7 +60,7 @@ public class HexMap_Continent : HexMap
                 {
                     h.Elevation = Mathf.Abs(h.Elevation) + 0.2f;
                 }
-
+                
             }
         }
         

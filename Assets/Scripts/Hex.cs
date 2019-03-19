@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using QPath;
 
 //Defines grid position, world space position, size, neighbours of a hex tile. Does not interact with unity directly.
-public class Hex{
+public class Hex : IQPathTile {
 
     public Hex(HexMap hexMap, int c, int r)
     {
@@ -24,7 +25,8 @@ public class Hex{
 
     // Data for map generation & in game effects?
     public float Elevation;
-
+    //TODO: This is just a temp public value
+    public int MovementCost = 1;
     //TODO: Property to track hex type
     //TODO: Property to track hex detail
 
@@ -35,6 +37,11 @@ public class Hex{
     float radius = 1f;
 
     HashSet<Unit> units;
+
+    public override string ToString()
+    {
+        return C + "," + R;
+    }
 
     bool allowWrapEastWest = true;
     bool allowWrapNorthSouth = false;
@@ -113,7 +120,11 @@ public class Hex{
         }
         return position;
     }
-
+    
+    public static float CostEstimate(IQPathTile aa, IQPathTile bb)
+    {
+        return Distance((Hex)aa, (Hex)bb);
+    }
     public static float Distance(Hex a, Hex b)
     {
         //FIX : Wrapping
@@ -150,6 +161,42 @@ public class Hex{
     public int BaseMovementCost()
     {
         //TODO: Factor in terrain type & features
-        return 1;
+        return MovementCost;
+    }
+
+    Hex[] neighbours; 
+
+    public IQPathTile[] GetNeighbours()
+    {
+        if(this.neighbours != null)
+        {
+            return this.neighbours;
+        }
+        List<Hex> neighbours = new List<Hex>();
+
+        neighbours.Add(HexMap.GetHexAt( C + 1, R + 0));
+        neighbours.Add(HexMap.GetHexAt( C + -1, R + 0));
+        neighbours.Add(HexMap.GetHexAt( C + 0, R + 1));
+        neighbours.Add(HexMap.GetHexAt( C + 0, R + -1));
+        neighbours.Add(HexMap.GetHexAt( C + 1, R + -1));
+        neighbours.Add(HexMap.GetHexAt( C + -1, R + 1));
+
+        List<Hex> neighbours2 = new List<Hex>();
+
+        foreach(Hex h in neighbours)
+        {
+            if(h != null)
+            {
+                neighbours2.Add(h);
+            }
+        }
+        this.neighbours = neighbours2.ToArray();
+        return this.neighbours;
+    }
+
+    public float AggregateCostToEnter(float costSoFar, IQPathTile sourceTile, IQPathUnit theUnit)
+    {
+        //TODO : Ignoring source tile right now, change when we have rivers
+        return ((Unit)theUnit).AggregateTurnsToEnterHex(this,costSoFar);
     }
 }

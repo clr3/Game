@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using QPath;
+using System.Linq;
 
-public class Unit{
+public class Unit : IQPathUnit{
    
     //Character Informarion
     [SerializeField] public string characterName { get; set; }
@@ -140,9 +142,34 @@ public class Unit{
         }
     }
 
-    public void SetHexPath(Hex[] hexPath)
+    public void DUMMY_PATHING_FUNCTION()
     {
-        this.hexPath = new Queue<Hex>(hexPath);
+
+        Hex[] pathHexes = QPath.QPath.FindPath<Hex>(
+            Hex.HexMap,
+            this, 
+            Hex, 
+            Hex.HexMap.GetHexAt(Hex.C + 3, Hex.R - 6), 
+            Hex.CostEstimate
+            );
+
+        Debug.Log("Got pathfinding path of length " + pathHexes.Length);
+        SetHexPath(pathHexes);
+
+    }
+
+    public void ClearHexPath()
+    {
+        this.hexPath = new Queue<Hex>();
+    }
+    public void SetHexPath(Hex[] hexArray)
+    {
+        this.hexPath = new Queue<Hex>(hexArray);
+
+        if (hexPath.Count > 0)
+        {
+            this.hexPath.Dequeue(); // First hex is the one we're standing in, so throw it out.
+        }
     }
 
     public void DoTurn()
@@ -166,16 +193,26 @@ public class Unit{
         //TODO: Override base movement cost based on movement mode + tile type;
         return hex.BaseMovementCost();
     }
+    float test_speed = 2;
+    float test_ap = 1;
 
     public float AggregateTurnsToEnterHex(Hex hex, float turnsToDate)
     {
-        float baseTurnsToEnterHex = MovementCostToEnterHex(hex) / speed; //Ex: Entering grass "1" turn
-        float turnsRemaining = ap / speed; //Ex: if at 1/2 move, we have .5 turns left
+        float baseTurnsToEnterHex = MovementCostToEnterHex(hex) / test_speed; //Ex: Entering grass "1" turn
+
+        if(baseTurnsToEnterHex < 0)
+        {
+            // Impassable
+            Debug.Log("Impassible terrain at: " + hex.ToString());
+            return -9999f;
+        }
+
+        float turnsRemaining = test_ap / speed; //Ex: if at 1/2 move, we have .5 turns left
 
         float turnsToDateWhole = Mathf.Floor(turnsToDate); // 4.33 => 4
         float turnsToDateFraction = turnsToDate - turnsToDateWhole; // 4.33 => 0.33
 
-        if (turnsToDateFraction < 0.01f || turnsToDateFraction > 0.99f){
+        if (turnsToDateFraction > 0 && turnsToDateFraction < 0.01f || turnsToDateFraction > 0.99f){
             Debug.LogError("Floating point drift");
 
             if (turnsToDateFraction < 0.01f) turnsToDateFraction = 0;
@@ -207,13 +244,25 @@ public class Unit{
                     turnsToDateFraction = 0;
                 }
                 turnsUsedAfterThismove = baseTurnsToEnterHex;
+                if (turnsUsedAfterThismove > 1) turnsUsedAfterThismove = 1;
             }
         }
         else
         {
             //Civ5 style movement state, we can always enter movement tile
+            turnsUsedAfterThismove = 1;
         }
+        return turnsToDateWhole + turnsUsedAfterThismove;
+       
     }
 
-    
+    /// <summary>
+    /// Turn cost to enter a hex (0.5 turns if movement cost is 1 and we have 2 max movement)
+    /// </summary>
+
+    public float CostToEnterHex(IQPathTile sourceTile, IQPathTile destinationTile)
+    {
+        return 1;
+    }
+
 }

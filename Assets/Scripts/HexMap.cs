@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using QPath;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexMap : MonoBehaviour
+public class HexMap : MonoBehaviour, IQPathWorld
 {
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,16 @@ public class HexMap : MonoBehaviour
                 foreach(Unit u in units)
                 {
                     u.DoTurn();
+                }
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (units != null)
+            {
+                foreach (Unit u in units)
+                {
+                    u.DUMMY_PATHING_FUNCTION();
                 }
             }
         }
@@ -63,6 +74,8 @@ public class HexMap : MonoBehaviour
 
     private Hex[,] hexes;
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
+    private Dictionary<GameObject, Hex> gameObjectToHexMap;
+
 
     private HashSet<Unit> units;
     private Dictionary<Unit, GameObject> unitToGameObjectMap;
@@ -97,6 +110,23 @@ public class HexMap : MonoBehaviour
         
     }
 
+    public Hex GetHexFromGameObject(GameObject hexGO)
+    {
+        if (gameObjectToHexMap.ContainsKey(hexGO))
+        {
+            return gameObjectToHexMap[hexGO];
+        }
+        return null;
+    }
+
+    public GameObject GetHexGO(Hex h)
+    {
+        if (hexToGameObjectMap.ContainsKey(h))
+        {
+            return hexToGameObjectMap[h];
+        }
+        return null;
+    }
     public Vector3 GetHexPosition(int q, int r)
     {
         Hex hex = GetHexAt(q, r);
@@ -116,6 +146,7 @@ public class HexMap : MonoBehaviour
 
         hexes = new Hex[numColumns, numRows];
         hexToGameObjectMap = new Dictionary<Hex, GameObject>();
+        gameObjectToHexMap = new Dictionary<GameObject, Hex>();
 
         for (int column = 0; column < numColumns; column++)
         {
@@ -136,12 +167,13 @@ public class HexMap : MonoBehaviour
                 GameObject hexGO = (GameObject)Instantiate(HexPrefab, pos, Quaternion.identity, this.transform);
 
                 hexToGameObjectMap[h] = hexGO;
+                gameObjectToHexMap[hexGO] = h;
 
                 hexGO.name = string.Format("HEX: {0},{1}", column, row);
                 hexGO.GetComponent<HexComponent>().Hex = h;
                 hexGO.GetComponent<HexComponent>().HexMap = this;
 
-                hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
+
 
 
             }
@@ -166,32 +198,42 @@ public class HexMap : MonoBehaviour
 
                 MeshRenderer mr = hexGO.GetComponentInChildren<MeshRenderer>();
                 MeshFilter mf = hexGO.GetComponentInChildren<MeshFilter>();
-                
+                h.MovementCost = 1;
                 if (h.Elevation >= HeightMountain)
                 {
                     mr.material = MatMountains;
                     mf.mesh = MeshMountain;
+                    h.MovementCost = -999999;
                 }
                 else if (h.Elevation >= HeightLand)
                 {
                     mr.material = MatLand;
                     mf.mesh = MeshLand;
+                    h.MovementCost = 9;
+
                 }
                 else if (h.Elevation >= HeightSwamp)
                 {
                     mr.material = MatSwamp;
                     mf.mesh = MeshSwamp;
+                    h.MovementCost = 6;
+
                 }
                 else if (h.Elevation >= HeightPlains)
                 {
                     mr.material = MatPlains ;
                     mf.mesh = MeshHill;
+                    h.MovementCost = 4;
+
                 }
                 else if (h.Elevation >= HeightGrasslands)
                 {
                     mr.material = MatGrasslands;
                     mf.mesh = MeshFlat;
-                   // GameObject.Instantiate(GrassPrefab, hexGO.transform.position, Quaternion.identity, hexGO.transform);
+
+                    h.MovementCost = 1;
+
+                    // GameObject.Instantiate(GrassPrefab, hexGO.transform.position, Quaternion.identity, hexGO.transform);
                 }
                 else
                 {
@@ -205,9 +247,12 @@ public class HexMap : MonoBehaviour
                     GameObject.Instantiate(CityPrefab, hexGO.transform.position, Quaternion.identity, hexGO.transform);
                     
                 }
+                hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1},\n{2}", column, row, h.MovementCost);
+
+                //hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}", h.MovementCost);
 
                 //HexMaterials[Random.Range(0, HexMaterials.Length)];
-             //   hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}", h.Elevation);
+                //   hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}", h.Elevation);
             }
         }
     }

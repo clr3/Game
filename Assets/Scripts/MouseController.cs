@@ -8,8 +8,15 @@ public class MouseController : MonoBehaviour
     void Start()
     {
         Update_CurrentFunc = Update_DetectModeStart;
+
+        hexMap = GameObject.FindObjectOfType<HexMap>();
+
+        LineRenderer = transform.GetComponentInChildren<LineRenderer>();
     }
     //Generic Variables
+    HexMap hexMap;
+    Hex hexUnderMouse;
+    Hex hexLastUnderMouse;
     Vector3 LastMousePosition;
 
     //Camera Dragging variabales 
@@ -17,13 +24,18 @@ public class MouseController : MonoBehaviour
     Vector3 cameraTargetOffset;
 
     Unit selectedUnit = null;
+    Hex[] hexPath;
+    LineRenderer LineRenderer;
 
     delegate void UpdateFunc();
     UpdateFunc Update_CurrentFunc;
 
+    public LayerMask LayerIDForHexTiles;
+
     void Update()
     {
-
+        hexUnderMouse = MouseToHex();
+        
         if (Input.GetKeyDown(KeyCode.Escape)){
             Debug.Log("Cancelling camera drag");
             CancelUpdateFunc();
@@ -34,23 +46,34 @@ public class MouseController : MonoBehaviour
         Update_ScrollZoom();
 
         LastMousePosition =  Input.mousePosition;
+        hexLastUnderMouse = hexUnderMouse;
     }
     
     void CancelUpdateFunc()
     {
         Update_CurrentFunc = Update_DetectModeStart;
         //Also do cleanup of ui associated with modes
+        selectedUnit = null;
     }
     void Update_DetectModeStart()
     {
 
         if (Input.GetMouseButtonDown(1))
         {
-            //RMB went down;
+            //LMB went down;
         }
         else if (Input.GetMouseButtonUp(1))
         {
-           // Debug.Log("MOUSE UP");
+            // Debug.Log("MOUSE UP");
+            Unit[] us = hexUnderMouse.Units();
+
+            //TODO: Cycling through multiple units in same tile
+            if(us.Length > 0 )
+            {
+                selectedUnit = us[0];
+                Update_CurrentFunc = Update_UnitMovement;
+            }
+           
         }
 
         else if (Input.GetMouseButton(1) && Input.mousePosition != LastMousePosition)
@@ -65,6 +88,25 @@ public class MouseController : MonoBehaviour
             //we have a selected unit, and holding down LMB. show path from unit to mouse position
         }
     }
+    Hex MouseToHex()
+    {
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitInfo;
+
+        int layerMask = LayerIDForHexTiles.value;
+
+        if(Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity,layerMask))
+        {
+            //Debug.Log(hitInfo.collider.name);
+
+            // Collider is a child of the "correct" game object that we want.
+            GameObject hexGO = hitInfo.rigidbody.gameObject;
+            return hexMap.GetHexFromGameObject(hexGO);
+        }
+        Debug.Log("found nothing");
+
+        return null;
+    }
 
     Vector3 MouseToGroundPlane(Vector3 mousePos)
     {
@@ -75,15 +117,46 @@ public class MouseController : MonoBehaviour
     }
     void Update_UnitMovement()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(1) || selectedUnit == null)
         {
             Debug.Log("complete unit movement");
-            //TODO: pathfinding
+
+            if(selectedUnit != null)
+            {
+                selectedUnit.SetHexPath(hexPath);
+            }
 
             CancelUpdateFunc();
             return;
         }
+
+        if (hexPath == null || hexUnderMouse != hexLastUnderMouse)
+        {
+            hexPath = QPath.QPath.FindPath<Hex>(hexMap, selectedUnit, selectedUnit.Hex, hexUnderMouse, Hex.CostEstimate);
+
+            DrawPath(hexPath);
+        }
+
     }
+
+    void DrawPath(Hex[] hexPath)
+    {
+        if(hexPath.Length == 0)
+        {
+            LineRenderer.enabled = false;
+            return;
+        }
+        LineRenderer.enabled = true;
+        Vector3[] ps = new Vector3[hexPath.Length];
+        for(int i = 0; i < hexPath.Length; i++)
+        {
+            GameObject hexGO = hexMap.GetHexGO(hexPath[i]);
+            ps[i] = hexGO.transform.position;
+        }
+        LineRenderer.positionCount = ps.Length;
+        LineRenderer.SetPositions(ps);
+    }
+
     void Update_CameraDrag()
     {
         if (Input.GetMouseButtonUp(1))
