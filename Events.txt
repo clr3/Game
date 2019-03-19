@@ -1,0 +1,45 @@
+The Ooze
+You notice a small, pulsating puddle of ooze on the ground in-font of you. As you approach it suddenly leaps at your leg and attaches tightly. After a brief struggle you throw it off and it squirms away. Surprisingly, the ordeal has left you feeling reinvigorated, if a little disgusted.
+0 0 0 0 0
+5 -7 0 0 0 0 1 0 1 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Oasis
+You come across a small patch of land that seem almost idyllic among this alien wilderness. After a short rest, you leave in high spirts. 
+0 0 0 0 0
+0 10 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Ancient Obelisk
+A giant, unnaturally smooth pillar of rock sits on the hill in-front of you. You approach and touch the obelisk without thinking and find yourself overwhelmed with feelings unlike anything you have experienced. You fade in unconsciousness… You awake shaken, but unharmed with the obelisk nowhere in sight. 
+0 0 0 0 0
+0 -5 0 0 0 1 0 5 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Abandoned Colony
+You come across what seems to be a colony much like your own but ruined and abandoned. You quickly scavenge some materials and leave feeling deeply disturbed by the knowledge that you are not the first humans to land on this supposedly uncharted planet.
+0 0 0 0 0
+0 -8 0 0 0 0 0 0 0 0 3 1
+0 0 0 0 0 0 0 0 0 0 0 0
+Berry Bushes
+You find some juicy-looking alien berries! Well you hope they’re berries, anyway. You quickly gather them up and move on.
+0 0 0 0 0
+0 0 0 0 0 0 0 0 0 1 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Effortless Hunt
+Not all this world’s wildlife is hostile, some of them seem completely passive. Studying this will be a task for more well-provisioned colonies, however. 
+0 0 0 0 0
+0 0 0 0 0 0 0 0 0 2 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Alien Cache
+You find a large metallic box in the centre of a clearing. When you approach it opens automatically and you find it seems to contain a large cache of supplies. You have no idea what any of it is for decided to take it all anyway.
+0 0 0 0 0
+0 0 1 0 0 0 0 0 0 2 2 1
+0 0 0 0 0 0 0 0 0 0 0 0
+Well-Rested 
+You take a nap in the shade of a small tree and awake feeling rejuvenated.
+0 0 0 0 0
+2 2 1 1 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0
+Night Terrors
+As you try to sleep, strange noises from the darkness unsettle you. You think that it must just be the alien equivalent of crickets chirping but it disturbs you all the same. Are the noises coming closer?
+0 0 2 4 7
+0 -2 0 0 0 1 0 0 0 0 0 0
+0 -15 0 0 0 0 0 0 0 0 0 0

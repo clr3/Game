@@ -12,8 +12,11 @@ public class SceneControl : MonoBehaviour {
     [SerializeField] private Button resolveButton;
     [SerializeField] private SkillManager managerSetter;
     [SerializeField] private GameObject skillPanel;
+    [SerializeField] private EventManager eventManager;
+    [SerializeField] private Canvas challengeUI;
 
     static public SkillManager manager;
+    //public CharacterController char;
 
     private List<Dice> diceSet = new List<Dice>();
     private List<Dice> inactiveDice = new List<Dice>();
@@ -31,13 +34,16 @@ public class SceneControl : MonoBehaviour {
         startPos = originalDice.transform.position; //screen position of the original die
         rollButton.interactable = false;
         // SetChallenge(10, challengePlaceholder); //set a challenge
+
     }
 
-    public void Initialise() {
+    public void Initialise() { //CHARCTER, CHALLENGE GOALS,
+        challengeUI.gameObject.SetActive(true);
 
         foreach (Dice clone in clonesDice) {
             Destroy(clone.gameObject);
         }
+
         diceSet.Clear();
         inactiveDice.Clear();
         clonesDice.Clear();
@@ -45,7 +51,8 @@ public class SceneControl : MonoBehaviour {
         originalDice.GetComponent<Selectable>().enabled = false;
         resolveButton.interactable = false;
 
-        SetChallenge(Random.Range(4, 14), new int[] { Random.Range(0, 3), Random.Range(0, 3), Random.Range(0, 3), Random.Range(0, 3) });
+
+        SetChallenge(new int[] { Random.Range(0, 3), Random.Range(0, 3), Random.Range(0, 3), Random.Range(0, 3) },Random.Range(4, 14)); //MEmbER DIS PLACEHOLEDE
     }
 
 
@@ -164,7 +171,7 @@ public class SceneControl : MonoBehaviour {
     /// </summary>
     /// <param name="baseNumOfDice">Initial dice pool size</param>
     /// <param name="goal">Goals of the challenge</param>
-    public void SetChallenge(int baseNumOfDice, int[] goal) {
+    public void SetChallenge(int[] goal, int baseNumOfDice) {
         PlayerPrefs.SetInt("Strength", goal[0]);
         PlayerPrefs.SetInt("Speed", goal[1]);
         PlayerPrefs.SetInt("Intelligence", goal[2]);
@@ -182,7 +189,7 @@ public class SceneControl : MonoBehaviour {
         int speed = 0;
         int intelligence = 0;
         int social = 0;
-        bool sucess = true;
+        bool success = true;
 
         foreach (Dice die in diceSet) {
             if (die.gameObject.GetComponent<Selectable>().selected) {
@@ -205,22 +212,29 @@ public class SceneControl : MonoBehaviour {
 
         if (strength < PlayerPrefs.GetInt("Strength")) {
             Debug.Log("Strength Failure ");
-            sucess = false;
+            success = false;
         }
         if (speed < PlayerPrefs.GetInt("Speed")) {
             Debug.Log("Speed Failure");
-            sucess = false;
+            success = false;
         }
         if (intelligence < PlayerPrefs.GetInt("Intelligence")) {
             Debug.Log("Intelligence Failure");
-            sucess = false;
+            success = false;
         }
         if (social < PlayerPrefs.GetInt("Social")) {
             Debug.Log("Social Failure");
-            sucess = false;
+            success = false;
         }
-        Debug.Log("Challenge Success = " + sucess);
-        //return success;
+        Debug.Log("Challenge Success = " + success);
+
+        challengeUI.gameObject.SetActive(false);
+
+        if (success) {
+            eventManager.HandleSucess();
+        } else {
+            eventManager.HandleFailure();
+        }
     }
 
 
@@ -281,7 +295,31 @@ public class SceneControl : MonoBehaviour {
     }
 
 
+    public void RandomAlterGoal(int value) {
 
+        int target = Random.Range(0, 4);
+        int current;
+
+        switch (target) {
+            case 0:
+                current = PlayerPrefs.GetInt("Strength");
+                PlayerPrefs.SetInt("Strength", current + value);
+                break;
+            case 1:
+                current = PlayerPrefs.GetInt("Speed");
+                PlayerPrefs.SetInt("Speed", current + value);
+                break;
+            case 2:
+                current = PlayerPrefs.GetInt("Intelligence");
+                PlayerPrefs.SetInt("Intelligence", current + value);
+                break;
+            case 3:
+                current = PlayerPrefs.GetInt("Social");
+                PlayerPrefs.SetInt("Social", current + value);
+                break;
+        }
+
+    }
 
 }
 

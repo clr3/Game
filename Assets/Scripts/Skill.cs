@@ -22,6 +22,7 @@ public class AddStrengthDice : Skill {
 
     public override void Activate() {
         SkillManager.controllor.AlterGoal("Strength", -1);
+        SkillManager.controllor.OpenSkillPanel();
     }
 }
 
@@ -34,6 +35,7 @@ public class AddSpeedDice : Skill {
 
     public override void Activate() {
         SkillManager.controllor.AlterGoal("Speed", -1);
+        SkillManager.controllor.OpenSkillPanel();
     }
 }
 
@@ -46,6 +48,7 @@ public class AddIntelligenceDice : Skill {
 
     public override void Activate() {
         SkillManager.controllor.AlterGoal("Intelligence", -1);
+        SkillManager.controllor.OpenSkillPanel();
     }
 }
 
@@ -58,6 +61,7 @@ public class AddSocialDice : Skill {
 
     public override void Activate() {
         SkillManager.controllor.AlterGoal("Social", -1);
+        SkillManager.controllor.OpenSkillPanel();
     }
 }
 
@@ -70,6 +74,7 @@ public class Reroll : Skill {
 
     public override void Activate() {
         SkillManager.controllor.Reroll();
+        SkillManager.controllor.OpenSkillPanel();
     }
 }
 
@@ -87,24 +92,82 @@ public class SelectiveReroll : Skill {
     }
 
 }
-public class DiceLord : Skill {
+
+public class FieldMedicine : Skill {
     void Awake() {
-        this.skillName = "Dice Lord";
-        this.skillDesc = "I am lord of all I can roll. Add one die to the dice pool";
+        this.skillName = "Field Medicine";
+        this.skillDesc = "Patched up, good as new...ish. Heal for 10hp but a random increases by one.";
+        this.skillIcon = manager.skillIcons[7];
+    }
+
+    public override void Activate() {
+        controllor.RandomAlterGoal(-1);
+        //char.alterHealth(10);//////////////////////
+        SkillManager.controllor.OpenSkillPanel();
+    }
+
+}
+
+public class Resourceful : Skill {
+    void Awake() {
+        this.skillName = "Resourceful";
+        this.skillDesc = "When you don’t have resources, you become resourceful. Add one die to the dice pool";
+        this.skillIcon = manager.skillIcons[8];
     }
 
     public override void Activate() {
         SkillManager.controllor.AddDie();
+        SkillManager.controllor.OpenSkillPanel();
     }
 }
 
-public class DiceDunce : Skill {
+public class ImpatientForager : Skill {
     void Awake() {
-        this.skillName = "Dice Dunce";
-        this.skillDesc = "i got da picture one!. Remove one die from the dice pool";
+        this.skillName = "Impatient Forager";
+        this.skillIcon = manager.skillIcons[9];
+        this.skillDesc = "Danger can wait, there's resources to gather!. Gain a random resource but removes two dice from the dice pool";
     }
 
     public override void Activate() {
+        //char.food++;////////////////////////
         controllor.RemoveDie();
+        controllor.RemoveDie();
+        SkillManager.controllor.OpenSkillPanel();
     }
 }
+
+public class CowboyDiplomacy : Skill {
+    void Awake() {
+        this.skillName = "Cowboy Diplomacy";
+        this.skillDesc = "The best diplomat is the one with the bigger stick. Social checks become Strength ones";
+        this.skillIcon = manager.skillIcons[10];
+    }
+
+    public override void Activate() {
+        int temp = PlayerPrefs.GetInt("Social");
+        controllor.AlterGoal("Social", -temp);
+        controllor.AlterGoal("Strength", temp);
+        SkillManager.controllor.OpenSkillPanel();
+    }
+}
+
+public class FragileReality : Skill {
+    void Awake() {
+        this.skillName = "Fragile Reality";
+        this.skillDesc = "Gaze blackly into the penguin-fringed abyss and embrace madness. Sacrifice your mind to save your body";
+        this.skillIcon = manager.skillIcons[11];
+    }
+
+    public override void Activate() {
+        controllor.Roll();
+        controllor.AlterGoal("Strength", Random.Range(-2,1));
+        controllor.AlterGoal("Speed", Random.Range(-2, 1));
+        controllor.AlterGoal("Intelligence", Random.Range(-2, 1));
+        controllor.AlterGoal("Social", -Random.Range(-2, 1));
+ 
+        SkillManager.controllor.OpenSkillPanel();
+    }
+
+
+}
+

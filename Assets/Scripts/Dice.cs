@@ -23,7 +23,7 @@ public class Dice : MonoBehaviour
     /// Change 
     /// </summary>
     /// <param name="diceType"></param>
-    /// <param name="image"></param>
+    /// <param name="image"></param> 
     public void SetDieFace(int diceType, Sprite image) {
 
         switch (diceType) {

@@ -30,6 +30,12 @@ public class SkillManager : MonoBehaviour {
         }
         AddSkill("SelectiveReroll");
         AddSkill("Reroll");
+        AddSkill("FragileReality");
+        AddSkill("CowboyDiplomacy");
+        AddSkill("ImpatientForager");
+        AddSkill("Resourceful");
+        AddSkill("FieldMedicine");
+
         //Add character-specific skills
         //
     }
