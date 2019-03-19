@@ -22,6 +22,7 @@ public class AddStrengthDice : Skill {
 
     public override void Activate() {
         SkillManager.controllor.AlterGoal("Strength", -1);
+        controllor.challenger.extraDice[0]--;
         SkillManager.controllor.OpenSkillPanel();
     }
 }
@@ -35,6 +36,7 @@ public class AddSpeedDice : Skill {
 
     public override void Activate() {
         SkillManager.controllor.AlterGoal("Speed", -1);
+        controllor.challenger.extraDice[1]--;
         SkillManager.controllor.OpenSkillPanel();
     }
 }
@@ -48,6 +50,7 @@ public class AddIntelligenceDice : Skill {
 
     public override void Activate() {
         SkillManager.controllor.AlterGoal("Intelligence", -1);
+        controllor.challenger.extraDice[2]--;
         SkillManager.controllor.OpenSkillPanel();
     }
 }
@@ -61,6 +64,7 @@ public class AddSocialDice : Skill {
 
     public override void Activate() {
         SkillManager.controllor.AlterGoal("Social", -1);
+        controllor.challenger.extraDice[3]--;
         SkillManager.controllor.OpenSkillPanel();
     }
 }
@@ -102,7 +106,7 @@ public class FieldMedicine : Skill {
 
     public override void Activate() {
         controllor.RandomAlterGoal(-1);
-        //char.alterHealth(10);//////////////////////
+        controllor.challenger.alterHealth(10);
         SkillManager.controllor.OpenSkillPanel();
     }
 
@@ -129,7 +133,7 @@ public class ImpatientForager : Skill {
     }
 
     public override void Activate() {
-        //char.food++;////////////////////////
+        controllor.challenger.food++;
         controllor.RemoveDie();
         controllor.RemoveDie();
         SkillManager.controllor.OpenSkillPanel();

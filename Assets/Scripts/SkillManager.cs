@@ -16,31 +16,22 @@ public class SkillManager : MonoBehaviour {
         int[] playerExtraDicePlaceholder = { 2, 1, 1, 1 };
 
         //Adding the basic extra dice skills
-        if (playerExtraDicePlaceholder[0] > 0) {
+        if (controllor.challenger.extraDice[0] > 0) {
             AddSkill("AddStrengthDice");
         }
-        if (playerExtraDicePlaceholder[1] > 0) {
+        if (controllor.challenger.extraDice[1] > 0) {
             AddSkill("AddSpeedDice");
         }
-        if (playerExtraDicePlaceholder[2] > 0) {
+        if (controllor.challenger.extraDice[2] > 0) {
             AddSkill("AddIntelligenceDice");
         }
-        if (playerExtraDicePlaceholder[3] > 0) {
+        if (controllor.challenger.extraDice[3] > 0) {
             AddSkill("AddSocialDice");
         }
-        AddSkill("SelectiveReroll");
-        AddSkill("Reroll");
-        AddSkill("FragileReality");
-        AddSkill("CowboyDiplomacy");
-        AddSkill("ImpatientForager");
-        AddSkill("Resourceful");
-        AddSkill("FieldMedicine");
 
-        //Add character-specific skills
-        //
-    }
-
-    void Update() {
+        foreach(string key in controllor.challenger.challengeSkills.Keys) {
+            AddSkill(key);
+        }
 
     }
 
