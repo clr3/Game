@@ -42,11 +42,6 @@ public class Unit : MonoBehaviour{
     public int meds { get; set; }
 
   
-
-
-
-    public Hex Hex { get; protected set; }
-
     void Start()
     {
         food = 0;
