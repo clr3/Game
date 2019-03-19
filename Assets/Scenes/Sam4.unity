@@ -2622,6 +2622,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bdbebc0611ad21479970f6c403c8683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UnitSelectionPanel: {fileID: 0}
+  LayerIDForHexTiles:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!4 &824178871
 Transform:
   m_ObjectHideFlags: 0
@@ -4351,7 +4355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1215168405
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6830,6 +6834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 392ced7948e9f7646bdfeb52efd5f3b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationIsPlaying: 0
   HexPrefab: {fileID: 3198387908726328146, guid: e39246b5d920d824b87ed30e1aecc424,
     type: 3}
   MeshMountain: {fileID: 4300000, guid: 7b43e4137e75e9f45869d9f3674b0165, type: 3}
