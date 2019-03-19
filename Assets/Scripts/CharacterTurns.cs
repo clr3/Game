@@ -13,7 +13,7 @@ public class CharacterTurns : MonoBehaviour
     [SerializeField] public Unit character3= new Unit(); 
     [SerializeField] public Unit character4= new Unit(); 
     [SerializeField] public Unit character5= new Unit(); 
-    public Unit[] characters = new Unit[noOfCharacters];
+    public Unit[] characters = new Unit[noOfCharacters]{};
     private int counter = 0;
 
     // Start is called before the first frame update
