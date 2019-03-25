@@ -22,7 +22,7 @@ public class Event : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
+        
     }
 
     public void Create(string _title, string _text, int[] _check, int[] _success, int[] _failure)

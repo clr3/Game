@@ -5,7 +5,7 @@ using System.Linq;
 using QPath;
 
 //Defines grid position, world space position, size, neighbours of a hex tile. Does not interact with unity directly.
-public class Hex : IQPathTile {
+public class Hex : IHexPathTile {
 
     public Hex(HexMap hexMap, int c, int r)
     {
@@ -26,13 +26,13 @@ public class Hex : IQPathTile {
 
 
     // Data for map generation & in game effects?
-    public float Elevation;
+    public float Difficulty;
 
     public enum TERRAIN_TYPE { PLAINS, GRASSLANDS, SWAMP, DESERT, RIVER, MOUNTAIN, HILLS}
     public enum ELEVATION_TYPE { PLAINS, GRASSLANDS, SWAMP, DESERT, RIVER, MOUNTAIN, HILLS }
 
     public TERRAIN_TYPE TerrainType { get; set; }
-    public ELEVATION_TYPE ElevationType { get; set; }
+    public ELEVATION_TYPE DifficultyType { get; set; }
 
     public readonly HexMap HexMap;
 
@@ -40,7 +40,7 @@ public class Hex : IQPathTile {
 
     float radius = 1f;
 
-    HashSet<Unit> units;
+    public HashSet<Unit> units;
 
     public override string ToString()
     {
@@ -125,7 +125,7 @@ public class Hex : IQPathTile {
         return position;
     }
     
-    public static float CostEstimate(IQPathTile aa, IQPathTile bb)
+    public static float CostEstimate(IHexPathTile aa, IHexPathTile bb)
     {
         return Distance((Hex)aa, (Hex)bb);
     }
@@ -165,26 +165,26 @@ public class Hex : IQPathTile {
 
     public int BaseMovementCost()
     {
-        if (ElevationType == ELEVATION_TYPE.SWAMP)
+        if (DifficultyType == ELEVATION_TYPE.SWAMP)
         {
             return 5;
         }
 
-        if (ElevationType == ELEVATION_TYPE.MOUNTAIN || ElevationType  == ELEVATION_TYPE.RIVER)
+        if (DifficultyType == ELEVATION_TYPE.MOUNTAIN || DifficultyType  == ELEVATION_TYPE.RIVER)
         {
             return -99;
         }
 
-        if (ElevationType == ELEVATION_TYPE.DESERT)
+        if (DifficultyType == ELEVATION_TYPE.DESERT)
         {
             return 7;
         }
 
-        if (ElevationType == ELEVATION_TYPE.HILLS)
+        if (DifficultyType == ELEVATION_TYPE.HILLS)
         {
             return 3;
         }
-        if (ElevationType == ELEVATION_TYPE.PLAINS)
+        if (DifficultyType == ELEVATION_TYPE.PLAINS)
         {
             return 2;
         }
@@ -194,7 +194,7 @@ public class Hex : IQPathTile {
 
     Hex[] neighbours; 
 
-    public IQPathTile[] GetNeighbours()
+    public IHexPathTile[] GetNeighbours()
     {
         if(this.neighbours != null)
         {
@@ -222,7 +222,7 @@ public class Hex : IQPathTile {
         return this.neighbours;
     }
 
-    public float AggregateCostToEnter(float costSoFar, IQPathTile sourceTile, IQPathUnit theUnit)
+    public float AggregateCostToEnter(float costSoFar, IHexPathTile sourceTile, IHexPathUnit theUnit)
     {
         //TODO : Ignoring source tile right now, change when we have rivers
         return ((Unit)theUnit).AggregateTurnsToEnterHex(this,costSoFar);

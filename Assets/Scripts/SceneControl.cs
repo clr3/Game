@@ -14,15 +14,17 @@ public class SceneControl : MonoBehaviour {
     [SerializeField] private GameObject skillPanel;
     [SerializeField] private EventManager eventManager;
     [SerializeField] private Canvas challengeUI;
-    
+
     static public SkillManager manager;
-    public Unit challenger;
+    //public CharacterController char;
 
     private List<Dice> diceSet = new List<Dice>();
     private List<Dice> inactiveDice = new List<Dice>();
     private List<Dice> clonesDice = new List<Dice>();
     private string[] results;
     private Vector3 startPos;
+    int[] dicePlaceholder = { 3, 3, 3, 3 };
+    int[] challengePlaceholder = { 3, 2, 1, 0 };
 
     void Start() {
         manager = managerSetter;
@@ -31,11 +33,12 @@ public class SceneControl : MonoBehaviour {
         resolveButton.interactable = false; //prevent challenge completion until at least one roll has happened
         startPos = originalDice.transform.position; //screen position of the original die
         rollButton.interactable = false;
+        // SetChallenge(10, challengePlaceholder); //set a challenge
+
     }
 
-    public void Initialise(Unit activeUnit, int[] goals) { //CHARCTER, CHALLENGE GOALS,
+    public void Initialise() { //CHARCTER, CHALLENGE GOALS,
         challengeUI.gameObject.SetActive(true);
-        challenger = activeUnit;
 
         foreach (Dice clone in clonesDice) {
             Destroy(clone.gameObject);
@@ -48,7 +51,8 @@ public class SceneControl : MonoBehaviour {
         originalDice.GetComponent<Selectable>().enabled = false;
         resolveButton.interactable = false;
 
-        SetChallenge(goals); 
+
+        SetChallenge(new int[] { Random.Range(0, 3), Random.Range(0, 3), Random.Range(0, 3), Random.Range(0, 3) },Random.Range(4, 14)); //MEmbER DIS PLACEHOLEDE
     }
 
 
@@ -70,7 +74,7 @@ public class SceneControl : MonoBehaviour {
             originalDice.ChangeDiceState();
         }
 
-        originalDice.diceSides = PopulateDice(challenger.getStatArray()); //set the dice sides
+        originalDice.diceSides = PopulateDice(dicePlaceholder); //set the dice sides
 
         //Dice grid layout variables - currently allows for a maximum of 16 dice
         const int gridRows = 2;
@@ -167,12 +171,12 @@ public class SceneControl : MonoBehaviour {
     /// </summary>
     /// <param name="baseNumOfDice">Initial dice pool size</param>
     /// <param name="goal">Goals of the challenge</param>
-    public void SetChallenge(int[] goal) {
+    public void SetChallenge(int[] goal, int baseNumOfDice) {
         PlayerPrefs.SetInt("Strength", goal[0]);
         PlayerPrefs.SetInt("Speed", goal[1]);
         PlayerPrefs.SetInt("Intelligence", goal[2]);
         PlayerPrefs.SetInt("Social", goal[3]);
-        GenerateDice(goal[4]);
+        GenerateDice(baseNumOfDice);
         rollButton.interactable = true;
     }
 
@@ -207,22 +211,22 @@ public class SceneControl : MonoBehaviour {
         }
 
         if (strength < PlayerPrefs.GetInt("Strength")) {
-            //Debug.Log("Strength Failure ");
+            Debug.Log("Strength Failure ");
             success = false;
         }
         if (speed < PlayerPrefs.GetInt("Speed")) {
-            //Debug.Log("Speed Failure");
+            Debug.Log("Speed Failure");
             success = false;
         }
         if (intelligence < PlayerPrefs.GetInt("Intelligence")) {
-            //Debug.Log("Intelligence Failure");
+            Debug.Log("Intelligence Failure");
             success = false;
         }
         if (social < PlayerPrefs.GetInt("Social")) {
-            //Debug.Log("Social Failure");
+            Debug.Log("Social Failure");
             success = false;
         }
-        //Debug.Log("Challenge Success = " + success);
+        Debug.Log("Challenge Success = " + success);
 
         challengeUI.gameObject.SetActive(false);
 
@@ -232,6 +236,7 @@ public class SceneControl : MonoBehaviour {
             eventManager.HandleFailure();
         }
     }
+
 
     /* SKILL FUNCTIONS*/
 
@@ -288,6 +293,7 @@ public class SceneControl : MonoBehaviour {
             selectDie.PointerExit();
         }
     }
+
 
     public void RandomAlterGoal(int value) {
 

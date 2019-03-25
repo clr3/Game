@@ -16,8 +16,6 @@ public class EventManager : MonoBehaviour
     [SerializeField] private Button eventResolve;
     [SerializeField] private SceneControl challengeSceneControllor;
 
-    private Unit activeUnit;
-
     Event currentEvent;
     private const int numcheck = 5;
     private const int numstats = 12;
@@ -95,7 +93,7 @@ public class EventManager : MonoBehaviour
     }
 
     public void StartChallenge() {
-        challengeSceneControllor.Initialise(activeUnit, currentEvent.check); //NEEDS VARS - character and currentEvent.check;
+        challengeSceneControllor.Initialise(); //NEEDS VARS - character and currentEvent.check;
     }
 
     public void ResolveEvent() {
@@ -103,6 +101,7 @@ public class EventManager : MonoBehaviour
     }
 
     public void HandleSucess() {
+        //char. handle event(sucess)
     }
 
     public void HandleFailure() {

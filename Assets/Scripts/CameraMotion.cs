@@ -10,7 +10,6 @@ public class CameraMotion : MonoBehaviour
         oldPosition = this.transform.position;
     }
 
-
     Vector3 oldPosition;
 
     // Update is called once per frame
@@ -31,13 +30,14 @@ public class CameraMotion : MonoBehaviour
 
     void checkIfCameraMoved()
     {
+        
         if(oldPosition != this.transform.position)
         {
             oldPosition = this.transform.position;
             if(hexes == null)
-                hexes = GameObject.FindObjectsOfType<HexComponent>();
-
-            foreach(HexComponent hex in hexes)
+                hexes = GameObject.FindObjectsOfType<HexComponent>();             
+                
+            foreach (HexComponent hex in hexes)
             {
                 hex.UpdatePosition();
             }

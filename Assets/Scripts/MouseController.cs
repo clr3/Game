@@ -94,8 +94,7 @@ public class MouseController : MonoBehaviour
     void CancelUpdateFunc()
     {
         Update_CurrentFunc = Update_DetectModeStart;
-        //Also do cleanup of ui associated with modes
-        //__selectedUnit = null;
+
 
         hexPath = null;
     }

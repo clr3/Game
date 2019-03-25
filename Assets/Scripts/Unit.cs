@@ -5,7 +5,8 @@ using QPath;
 using System.Linq;
 using System;
 
-public class Unit : IQPathUnit{
+public class Unit : IHexPathUnit
+{
 
     //Values that will not be changed
     [SerializeField] private int carryCapacity { get; set; } //Carry Capacity = Strenght 2x
@@ -26,17 +27,17 @@ public class Unit : IQPathUnit{
 
 
     //Character Information
-    public string characterName  { get; set; }
+    public string characterName { get; set; }
     public string description { get; set; }
     [SerializeField] public Dictionary<string, string> challengeSkills = new Dictionary<string, string>(); //Have to match the name of the skill class 
 
     //Charactes Stats
     public float speed = 4;
-    public float ap=5;
+    public float ap = 5;
 
 
     public int strenght { get; set; }
-   // public int speed { get; set; }
+    // public int speed { get; set; }
     public int intelligence { get; set; }
     public int charisma { get; set; }
     public int health { get; set; }
@@ -140,7 +141,6 @@ public class Unit : IQPathUnit{
 
     List<Hex> hexPath;
 
-    //TODO: Should be moved to central config
     const bool MOVEMENT_RULSE_LIKE_CIV6 = false;
 
     public void SetHex(Hex newHex)
@@ -155,7 +155,7 @@ public class Unit : IQPathUnit{
 
         Hex.AddUnit(this);
 
-        if(OnUnitMoved != null)
+        if (OnUnitMoved != null)
         {
             OnUnitMoved(oldHex, newHex);
         }
@@ -189,24 +189,24 @@ public class Unit : IQPathUnit{
 
     public bool UnitWaitingForOrders()
     {
-        if(ap > 0 && (hexPath == null || hexPath.Count == 0))
+        if (ap > 0 && (hexPath == null || hexPath.Count == 0))
         {
             return true;
         }
         return false;
     }
-    
+
     public bool DoMove()
     {
         // do queued move?
         Debug.Log("Do turn");
-        
-        if(ap <= 0)
+
+        if (ap <= 0)
         {
             return false;
         }
 
-        if(hexPath == null || hexPath.Count == 0)
+        if (hexPath == null || hexPath.Count == 0)
         {
             return false;
         }
@@ -218,7 +218,7 @@ public class Unit : IQPathUnit{
 
         int costToEnter = MovementCostToEnterHex(newHex, false);
 
-        if(costToEnter > ap && MOVEMENT_RULSE_LIKE_CIV6)
+        if (costToEnter > ap && MOVEMENT_RULSE_LIKE_CIV6)
         {
             return false;
         }
@@ -232,8 +232,8 @@ public class Unit : IQPathUnit{
         }
 
         SetHex(newHex);
-        ap = Mathf.Max(ap - costToEnter, 0); 
-        return hexPath != null && ap > 0 ;
+        ap = Mathf.Max(ap - costToEnter, 0);
+        return hexPath != null && ap > 0;
 
         // Grab first hex from queue 
 
@@ -243,17 +243,17 @@ public class Unit : IQPathUnit{
     {
         if (isScout)
         {
-            if (hex.ElevationType == Hex.ELEVATION_TYPE.SWAMP)
+            if (hex.DifficultyType == Hex.ELEVATION_TYPE.SWAMP)
             {
                 return 3;
             }
 
-            if (hex.ElevationType == Hex.ELEVATION_TYPE.MOUNTAIN || hex.ElevationType == Hex.ELEVATION_TYPE.RIVER)
+            if (hex.DifficultyType == Hex.ELEVATION_TYPE.MOUNTAIN || hex.DifficultyType == Hex.ELEVATION_TYPE.RIVER)
             {
                 return 8;
             }
 
-            if (hex.ElevationType == Hex.ELEVATION_TYPE.DESERT)
+            if (hex.DifficultyType == Hex.ELEVATION_TYPE.DESERT)
             {
                 return 5;
             }
@@ -267,7 +267,7 @@ public class Unit : IQPathUnit{
     {
         float baseTurnsToEnterHex = MovementCostToEnterHex(hex, false) / speed; //Ex: Entering grass "1" turn
 
-        if(baseTurnsToEnterHex < 0)
+        if (baseTurnsToEnterHex < 0)
         {
             // Impassable
             Debug.Log("Impassible terrain at: " + hex.ToString());
@@ -279,7 +279,8 @@ public class Unit : IQPathUnit{
         float turnsToDateWhole = Mathf.Floor(turnsToDate); // 4.33 => 4
         float turnsToDateFraction = turnsToDate - turnsToDateWhole; // 4.33 => 0.33
 
-        if (turnsToDateFraction > 0 && turnsToDateFraction < 0.01f || turnsToDateFraction > 0.99f){
+        if (turnsToDateFraction > 0 && turnsToDateFraction < 0.01f || turnsToDateFraction > 0.99f)
+        {
             Debug.LogError("Floating point drift");
 
             if (turnsToDateFraction < 0.01f) turnsToDateFraction = 0;
@@ -320,114 +321,136 @@ public class Unit : IQPathUnit{
             turnsUsedAfterThismove = 1;
         }
         return turnsToDateWhole + turnsUsedAfterThismove;
-       
+
     }
 
     /// <summary>
     /// Turn cost to enter a hex (0.5 turns if movement cost is 1 and we have 2 max movement)
     /// </summary>
 
-    public float CostToEnterHex(IQPathTile sourceTile, IQPathTile destinationTile)
+    public float CostToEnterHex(IHexPathTile sourceTile, IHexPathTile destinationTile)
     {
         return 1;
     }
+    public void alterHealth(int val)
+    {
 
-    public void HandleEvent(int[] eventResult) {
+        health += val;
+
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+        else if (health <= 0)
+        {
+            Dead();
+        }
+
+    }
+
+    public void alterSanity(int val)
+    {
+
+        sanity += val;
+
+        if (sanity > maxSanity)
+        {
+            sanity = maxSanity;
+        }
+        else if (sanity <= 0)
+        {
+            Dead();
+        }
+
+    }
+    public void HandleEvent(int[] eventResult)
+    {
 
         if (eventResult.Length != 12) { return; } //check correctly-sized array passed
 
         //health
-        if (eventResult[0] != 0) {
+        if (eventResult[0] != 0)
+        {
             this.alterHealth(eventResult[0]);
         }
 
         //sanity
-        if (eventResult[1] != 0) {
+        if (eventResult[1] != 0)
+        {
             this.alterSanity(eventResult[1]);
         }
 
         //strength dice bank
-        if (eventResult[2] != 0) {
+        if (eventResult[2] != 0)
+        {
             this.AlterDiceBank(0, eventResult[2]);
         }
 
         //speed dice bank
-        if (eventResult[3] != 0) {
+        if (eventResult[3] != 0)
+        {
             this.AlterDiceBank(1, eventResult[3]);
         }
 
         //intelligence dice bank
-        if (eventResult[4] != 0) {
+        if (eventResult[4] != 0)
+        {
             this.AlterDiceBank(2, eventResult[4]);
         }
 
         //social dice bank
-        if (eventResult[5] != 0) {
+        if (eventResult[5] != 0)
+        {
             this.AlterDiceBank(3, eventResult[5]);
         }
 
         //max health
-        if (eventResult[6] != 0) {
+        if (eventResult[6] != 0)
+        {
             this.maxHealth += eventResult[6];
         }
 
         //max sanity
-        if (eventResult[7] != 0) {
+        if (eventResult[7] != 0)
+        {
             this.maxSanity += eventResult[7];
         }
 
         //action points
-        if (eventResult[8] != 0) {
+        if (eventResult[8] != 0)
+        {
             this.ap += eventResult[8];
         }
 
         //food
-        if (eventResult[9] != 0) {
+        if (eventResult[9] != 0)
+        {
             this.food += eventResult[9];
         }
 
         //materials
-        if (eventResult[10] != 0) {
+        if (eventResult[10] != 0)
+        {
             this.resources += eventResult[10];
         }
 
         //meds
-        if (eventResult[11] != 0) {
+        if (eventResult[11] != 0)
+        {
             this.meds += eventResult[11];
         }
 
     }
 
-    public void AlterDiceBank(int stat, int val) {
+    public void AlterDiceBank(int stat, int val)
+    {
 
         if (stat > 3 || stat < 0) { return; }
 
         this.extraDice[stat] += val;
-        if (extraDice[stat] < 0) {
+        if (extraDice[stat] < 0)
+        {
             extraDice[stat] = 0;
-        }
-
-    }
-    public void alterHealth(int val) {
-
-        health += val;
-
-        if (health > maxHealth) {
-            health = maxHealth;
-        } else if (health <= 0) {
-            Dead();
-        }
-
-    }
-
-    public void alterSanity(int val) {
-
-        sanity += val;
-
-        if (sanity > maxSanity) {
-            sanity = maxSanity;
-        } else if (sanity <= 0) {
-            Dead();
         }
 
     }
